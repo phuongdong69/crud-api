@@ -1,0 +1,49 @@
+services:
+  crud-service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: edulive/crud-service:1.0.0
+    container_name: crud-service
+    volumes:
+      - .:/opt/sources/web
+      - ./docker/supervisord.conf:/etc/supervisor/supervisord.conf
+      - ./docker/php.ini:/usr/local/etc/php/php.ini
+    ports:
+      - "${APP_PORT}:80"
+    depends_on:
+      - crud-service-postgres
+
+    networks:
+      app-network:
+        ipv4_address: 174.5.0.4
+
+  crud-service-postgres:
+    image: postgres:latest
+    volumes:
+      - 'crud-postgres-data:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    container_name: crud-service-postgres
+    ports:
+      - "${DB_FORWARD_PORT}:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${DB_USERNAME}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      app-network:
+        ipv4_address: 174.5.0.5
+
+networks:
+  app-network:
+    external: true
+
+volumes:
+  crud-cache-data:
+    driver: local
+  crud-postgres-data:
+    driver: local
