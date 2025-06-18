@@ -26,8 +26,6 @@ class DatabaseSeeder extends Seeder
             DB::table('products')->insert([
                 'name' => Str::random(10),
                 'description' => Str::random(50),
-                'price' => rand(10000000, 30000000), // 10 triệu ~ 30 triệu
-                'quantity' => rand(1, 100),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
