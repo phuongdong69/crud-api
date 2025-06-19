@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateProductVariantRequest extends FormRequest
 {
@@ -21,9 +22,15 @@ class UpdateProductVariantRequest extends FormRequest
      */
     public function rules(): array
     {
+    
         return [
             'product_id' => 'sometimes|exists:products,id',
-            'sku' => 'sometimes|string|unique:product_variants,sku,' . $this->route('product_variant'),
+            'sku' => 'sometimes|string|unique:product_variants,sku,' . $this->route('product_variant')->id,
+            // 'sku' => [
+            //     'sometimes',
+            //     'string',
+            //     Rule::unique('product_variants', 'sku')->ignore($this->route('product_variant')->id),
+            // ],
             'price' => 'sometimes|numeric|min:0',
             'stock' => 'sometimes|integer|min:0',
         ];

@@ -23,7 +23,6 @@ class StoreProductVariantValueRequest extends FormRequest
     {
         return [
             'product_variant_id' => 'required|exists:product_variants,id',
-            // 'attribute_id' => 'required|exists:attributes,id',
             'attribute_value_id' => 'required|exists:attribute_values,id',
         ];
     }
