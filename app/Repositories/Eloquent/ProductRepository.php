@@ -31,8 +31,8 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
     //     $product = $this->find($id);
     //     return $product->delete();
     // }
-    public function __construct(Product $model)    
+    public function __construct(Product $product)    
     {
-        $this->model = $model;
+        $this->model = $product;
     }
 }

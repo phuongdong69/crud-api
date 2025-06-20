@@ -8,10 +8,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
-   protected $fillable = ['name', 'description'];
+   protected $fillable = ['category_id','name', 'description'];
 
     public function variants(): HasMany
     {
         return $this->hasMany(ProductVariant::class);
+    }
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 }

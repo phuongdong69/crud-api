@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\AttributeValueController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductVariantValueController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,4 +17,6 @@ Route::middleware('api')->group(function () {
     Route::apiResource('attribute_values', AttributeValueController::class);
     Route::apiResource('product_variants', ProductVariantController::class);
     Route::apiResource('product_variant_values', ProductVariantValueController::class);
+    Route::apiResource('categories', CategoryController::class);
+    Route::get('categories/by-name/{name}', [CategoryController::class, 'getByName']);
 });

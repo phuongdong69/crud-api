@@ -13,6 +13,7 @@ class ProductTransformer
     {
         return [
             "id"=> $product->id,
+            "category_id"=> $product->category_id,
             "name"=> $product->name,
             "description"=> $product->description,
         ];
