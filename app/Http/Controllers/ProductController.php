@@ -44,15 +44,16 @@ class ProductController extends Controller
      */
     public function show(int $id)
     {
-        $product = $this->productService->getById($id);
+        $product = $this->productService->getProductWithVariants($id);
         return response()->json($this->transformer->item($product));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductRequest $request, int $id)
+    public function update(UpdateProductRequest $request, int $id)
     {
+        
         $product = $this->productService->update($id, $request->validated());
         return response()->json($this->transformer->item($product));
     }

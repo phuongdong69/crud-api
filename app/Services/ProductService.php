@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Product;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 
 class ProductService
@@ -15,6 +16,7 @@ class ProductService
     public function getAll()
     {
         return $this->productRepo->all();
+        // return Product::with('product_variants')->get();
     }
     public function getByID($id)
     {
@@ -28,5 +30,9 @@ class ProductService
     }
     public function delete($id){
         return $this->productRepo->delete($id);
+    }
+    public function getProductWithVariants($id)
+    {
+        return $this->productRepo->getWithVariants($id);
     }
 }

@@ -14,4 +14,8 @@ class AttributeValue extends Model
     {
         return $this->belongsTo(Attribute::class);
     }
+    public function product_variant_values(): HasMany
+    {
+        return $this->hasMany(ProductVariantValue::class);
+    }
 }

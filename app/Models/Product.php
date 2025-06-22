@@ -10,7 +10,7 @@ class Product extends Model
 {
    protected $fillable = ['category_id','name', 'description'];
 
-    public function variants(): HasMany
+    public function product_variants(): HasMany
     {
         return $this->hasMany(ProductVariant::class);
     }

@@ -31,8 +31,18 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
     //     $product = $this->find($id);
     //     return $product->delete();
     // }
-    public function __construct(Product $product)    
+    public function __construct(Product $product)
     {
         $this->model = $product;
+    }
+    public function getWithVariants($id)
+    {
+        return Product::with([
+            'product_variants.product_variant_values.attribute_value.attribute'
+        ])->findOrFail($id);
+    }
+    public function all()
+    {
+        return Product::with('product_variants.product_variant_values.attribute_value.attribute')->get();
     }
 }

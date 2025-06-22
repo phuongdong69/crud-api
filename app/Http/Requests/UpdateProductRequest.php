@@ -21,6 +21,7 @@ class UPdateProductRequest extends FormRequest
      */
     public function rules(): array
     {
+        
         return [
             'name' => 'sometimes|string|max:255',
             'description' => 'sometimes|nullable|string',

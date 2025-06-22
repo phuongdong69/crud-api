@@ -10,12 +10,12 @@ class ProductVariant extends Model
 {
     protected $fillable = ['product_id', 'sku', 'price', 'stock'];
 
-    public function product(): BelongsTo
+    public function product_variants(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
 
-    public function variantAttributeValues(): HasMany
+    public function product_variant_values(): HasMany
     {
         return $this->hasMany(ProductVariantValue::class);
     }
