@@ -47,13 +47,19 @@ class ProductController extends Controller
         $product = $this->productService->getProductWithVariants($id);
         return response()->json($this->transformer->item($product));
     }
-
+    public function getWithVariants($id)
+    {
+        return Product::with([
+            'category',
+            'product_variants.product_variant_values.attribute_value.attribute'
+        ])->findOrFail($id);
+    }
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateProductRequest $request, int $id)
     {
-        
+
         $product = $this->productService->update($id, $request->validated());
         return response()->json($this->transformer->item($product));
     }

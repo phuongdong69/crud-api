@@ -38,11 +38,19 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
     public function getWithVariants($id)
     {
         return Product::with([
+            'category',
             'product_variants.product_variant_values.attribute_value.attribute'
         ])->findOrFail($id);
     }
     public function all()
     {
-        return Product::with('product_variants.product_variant_values.attribute_value.attribute')->get();
+        return Product::with('category','product_variants.product_variant_values.attribute_value.attribute')->get();
     }
+    public function find($id)
+{
+    return Product::with([
+        'category',
+        'product_variants.product_variant_values.attribute_value.attribute'
+    ])->findOrFail($id);
+}
 }
