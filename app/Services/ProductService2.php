@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Services;
 
@@ -14,21 +14,40 @@ class ProductService2 extends BaseService
         $this->repository = $productRepo;
     }
     public function create(array $data)
-{
-    // Nếu có truyền category_name mà không có category_id
-    if (!empty($data['category_name']) && empty($data['category_id'])) {
-        // Tìm hoặc tạo mới category theo tên
-        $category = Category::firstOrCreate(['name' => $data['category_name']]);
-        $data['category_id'] = $category->id;
+    {
+        // Nếu có truyền category_name mà không có category_id
+        if (!empty($data['category_name']) && empty($data['category_id'])) {
+            // Tìm hoặc tạo mới category theo tên
+            $data['category_id'] = Category::firstOrCreate(['name' => $data['category_name']])->id;
+        }
+
+        // Xóa category_name khỏi $data để tránh lỗi khi create Product
+        unset($data['category_name']);
+
+        // Tạo sản phẩm
+    $product = $this->repository->create($data);
+
+    // Xử lý tạo mới variant và attribute nếu chưa có
+    foreach ($variants as $variantData) {
+        // Tạo mới hoặc lấy variant
+        $variant = $product->product_variants()->firstOrCreate(['name' => $variantData['name']]);
+
+        foreach ($variantData['values'] as $valueData) {
+            // Tạo mới hoặc lấy attribute
+            $attribute = \App\Models\Attribute::firstOrCreate(['name' => $valueData['attribute']]);
+            // Tạo mới hoặc lấy attribute_value
+            $attributeValue = \App\Models\AttributeValue::firstOrCreate([
+                'attribute_id' => $attribute->id,
+                'value' => $valueData['value']
+            ]);
+            // Gắn giá trị vào variant
+            $variant->product_variant_values()->firstOrCreate([
+                'attribute_value_id' => $attributeValue->id
+            ]);
+        }
     }
 
-    // Xóa category_name khỏi $data để tránh lỗi khi create Product
-    unset($data['category_name']);
-
-    return $this->repository->create($data);
-}
-public function find($id)
-{
-    return $this->model->with('category')->findOrFail($id);
-}
+    // Trả về sản phẩm đã load các quan hệ
+    return $this->repository->find($product->id);
+    }
 }

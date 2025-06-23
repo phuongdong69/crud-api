@@ -49,7 +49,7 @@ class ProductController extends Controller
      */
     public function show(int $id)
     {
-        $product = $this->productService->getProductWithVariants($id);
+        $product = $this->productService->find($id);
         return response()->json($this->transformer->item($product));
     }
 

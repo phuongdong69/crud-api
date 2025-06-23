@@ -33,11 +33,12 @@ abstract class BaseRepository2 implements BaseRepositoryInterface2
     }
 
     public function update(int|string $id, array $data)
-    {
-        $model = $this->model->findOrFail($id);
-        $model->update($data);
-        return $model;
-    }
+{
+    $model = $this->model->findOrFail($id);
+    $model->update($data);
+    // Trả về bản ghi mới nhất, có thể eager load quan hệ nếu cần
+    return $this->model->with('category', 'product_variants.product_variant_values.attribute_value.attribute')->find($id);
+}
 
     public function delete(int|string $id)
     {
