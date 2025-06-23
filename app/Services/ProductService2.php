@@ -48,6 +48,8 @@ class ProductService2 extends BaseService
     }
 
     // Trả về sản phẩm đã load các quan hệ
-    return $this->repository->find($product->id);
+        return $this->repository->find($product->id, [
+            'relations' => ['category']
+        ]);
     }
 }

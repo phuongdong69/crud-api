@@ -7,14 +7,14 @@ use App\Repositories\BaseRepository;
 use App\Repositories\BaseRepository2;
 use App\Repositories\Contracts\ProductRepositoryInterface2;
 
-class ProductRepository2 extends BaseRepository2 
+class ProductRepository2 extends BaseRepository2
 {
-    public function __construct(Product $product)
+    public function __construct()
     {
-        $this->model = $product;
+        $this->model = app()->make(Product::class);
     }
-    public function find($id)
-{
-    return $this->model->with('category')->findOrFail($id);
-}
+//    public function find($id)
+//{
+//    return $this->model->with('category')->findOrFail($id);
+//}
 }

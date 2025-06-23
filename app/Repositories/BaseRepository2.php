@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\Contracts\BaseRepositoryInterface;
 
+// REPOSITORY PATTERNS
 abstract class BaseRepository2 implements BaseRepositoryInterface2
 {
     protected Model $model;
@@ -22,9 +23,13 @@ abstract class BaseRepository2 implements BaseRepositoryInterface2
             ? $query->select($columns)->paginate($perPage)
             : $query->select($columns)->get();
     }
-    public function find(int|string $id)
+    public function find(int|string $id, $options = [])
     {
-        return $this->model->findOrFail($id);
+        $query = $this->model->newQuery();
+        if (count($options)) {
+            $this->optionBuilder($query, $options);
+        }
+        return $query->findOrFail($id);
     }
 
     public function create(array $data)
@@ -32,7 +37,7 @@ abstract class BaseRepository2 implements BaseRepositoryInterface2
         return $this->model->create($data);
     }
 
-    public function update(int|string $id, array $data)
+    public function update(int|string $id, array $data): ?Model
 {
     $model = $this->model->findOrFail($id);
     $model->update($data);
@@ -46,8 +51,14 @@ abstract class BaseRepository2 implements BaseRepositoryInterface2
         return $model->delete();
     }
 
+    // builder patterns
+
     protected function optionBuilder(&$query, array $options = [])
     {
+        $relations = $options['relations'] ?? [];
+        if (!empty($relations)) {
+            $query->with($relations);
+        }
         foreach ($options['join'] ?? [] as $join) {
             $type = $join['type'] ?? 'inner';
             $query->{$type . 'Join'}(
