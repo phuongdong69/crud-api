@@ -14,7 +14,7 @@ class ProductTransformer
         
              return [
             "id" => $product->id,
-            "category_name" => $product->category_name??null,
+            "category_name" => $product->category->name??null,
             "name" => $product->name,
             "description" => $product->description,
             "variants" => $product->product_variants->map(function($variant) {
