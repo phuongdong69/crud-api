@@ -26,9 +26,7 @@ class ProductRequest extends FormRequest
             'category_name' => 'required_without:category_id|nullable|string',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'brand'         => 'nullable|string',
-            'price'         => 'nullable|numeric',
-            'status'        => 'nullable|string',
+            // 'status'        => 'nullable|string',
         ];
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductVariantController;
+use App\Http\Controllers\ShippingController;
 use App\Models\AttributeValue;
 
 // Định nghĩa route API ở đây
@@ -19,4 +20,5 @@ Route::middleware('api')->group(function () {
     Route::apiResource('product_variant_values', ProductVariantValueController::class);
     Route::apiResource('categories', CategoryController::class);
     Route::get('categories/by-name/{name}', [CategoryController::class, 'getByName']);
+    Route::post('/shipping/calculate', [ShippingController::class, 'calculate']);
 });
