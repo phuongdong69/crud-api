@@ -20,7 +20,9 @@ class ProductTransformer
             "variants" => $product->product_variants->map(function($variant) {
             return [
                 "id" => $variant->id,
-                "name" => $variant->name,
+                "sku" => $variant->sku,
+                "price" => $variant->price,
+                "stock" => $variant->stock,
                 "attributes" => $variant->product_variant_values->map(function($pvValue) {
                     return [
                         "attribute_name" => $pvValue->attribute_value->attribute->name ?? null,

@@ -11,7 +11,8 @@ class ProductRepository2 extends BaseRepository2
 {
     public function __construct()
     {
-        $this->model = app()->make(Product::class);
+        // $this->model = app()->make(Product::class);
+        parent::__construct(app()->make(Product::class));
     }
 //    public function find($id)
 //{

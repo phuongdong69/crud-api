@@ -38,7 +38,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductRequest $request)
+    public function store(StoreProductRequest $request)
     {
         $product = $this->productService->create($request->validated());
         return response()->json($this->transformer->item($product), 201);

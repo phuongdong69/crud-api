@@ -21,10 +21,24 @@ class UPdateProductRequest extends FormRequest
      */
     public function rules(): array
     {
-        
+
         return [
+            // 'name' => 'sometimes|string|max:255',
+            // 'description' => 'sometimes|nullable|string',
             'name' => 'sometimes|string|max:255',
-            'description' => 'sometimes|nullable|string',
+            'description' => 'sometimes|nullable|string|max:1000',
+            'category_id' => 'sometimes|nullable|exists:categories,id',
+            'category_name' => 'sometimes|nullable|string|max:255',
+
+            // Cho phép cập nhật biến thể (nếu có gửi)
+            'variants' => 'sometimes|array|min:1',
+            'variants.*.sku' => 'required_with:variants|string|max:255',
+            'variants.*.price' => 'required_with:variants|numeric|min:0',
+            'variants.*.stock' => 'required_with:variants|integer|min:0',
+
+            'variants.*.attribute_values' => 'required_with:variants|array|min:1',
+            'variants.*.attribute_values.*.attribute' => 'required|string|max:255',
+            'variants.*.attribute_values.*.value' => 'required|string|max:255',
         ];
     }
 }

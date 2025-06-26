@@ -2,15 +2,22 @@
 
 namespace App\Repositories;
 
+use App\Repositories\BaseRepositoryInterface2 as RepositoriesBaseRepositoryInterface2;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\Contracts\BaseRepositoryInterface;
+use App\Repositories\Contracts\BaseRepositoryInterface2;
 
 // REPOSITORY PATTERNS
-abstract class BaseRepository2 implements BaseRepositoryInterface2
+// abstract class BaseRepository2 implements BaseRepositoryInterface2
+class BaseRepository2 implements RepositoriesBaseRepositoryInterface2
 {
     protected Model $model;
+    public function __construct(Model $model)
+    {
+        $this->model = $model;
+    }
     public function get(array $columns = ['*'], array $options = []): Collection|LengthAwarePaginator
     {
         $query = $this->model->newQuery();
@@ -23,12 +30,10 @@ abstract class BaseRepository2 implements BaseRepositoryInterface2
             ? $query->select($columns)->paginate($perPage)
             : $query->select($columns)->get();
     }
-    public function find(int|string $id, $options = [])
+    public function find(int|string $id, array $options = [])
     {
         $query = $this->model->newQuery();
-        if (count($options)) {
-            $this->optionBuilder($query, $options);
-        }
+        $this->optionBuilder($query, $options);
         return $query->findOrFail($id);
     }
 
@@ -37,12 +42,15 @@ abstract class BaseRepository2 implements BaseRepositoryInterface2
         return $this->model->create($data);
     }
 
-    public function update(int|string $id, array $data): ?Model
+    public function update(int|string $id, array $data, array $options = []): ?Model
 {
     $model = $this->model->findOrFail($id);
     $model->update($data);
     // Trả về bản ghi mới nhất, có thể eager load quan hệ nếu cần
-    return $this->model->with('category', 'product_variants.product_variant_values.attribute_value.attribute')->find($id);
+    $query = $this->model->newQuery();
+    $this->optionBuilder($query, $options);
+
+    return $query->find($id);
 }
 
     public function delete(int|string $id)

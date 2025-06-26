@@ -25,31 +25,45 @@ class ProductService2 extends BaseService
         unset($data['category_name']);
 
         // Tạo sản phẩm
-    $product = $this->repository->create($data);
+        $product = $this->repository->create($data);
+        
+        // 
+        // Xử lý tạo mới variant và attribute nếu chưa có
+        // foreach ($variants as $variantData) {
+        //     // Tạo mới hoặc lấy variant
+        //     $variant = $product->product_variants()->firstOrCreate(['name' => $variantData['name']]);
 
-    // Xử lý tạo mới variant và attribute nếu chưa có
-    foreach ($variants as $variantData) {
-        // Tạo mới hoặc lấy variant
-        $variant = $product->product_variants()->firstOrCreate(['name' => $variantData['name']]);
+        //     foreach ($variantData['values'] as $valueData) {
+        //         // Tạo mới hoặc lấy attribute
+        //         $attribute = \App\Models\Attribute::firstOrCreate(['name' => $valueData['attribute']]);
+        //         // Tạo mới hoặc lấy attribute_value
+        //         $attributeValue = \App\Models\AttributeValue::firstOrCreate([
+        //             'attribute_id' => $attribute->id,
+        //             'value' => $valueData['value']
+        //         ]);
+        //         // Gắn giá trị vào variant
+        //         $variant->product_variant_values()->firstOrCreate([
+        //             'attribute_value_id' => $attributeValue->id
+        //         ]);
+        //     }
+        // }
+        if (isset($data['variants'])) {
+            foreach ($data['variants'] as $variantData) {
+                $variant = $product->product_variants()->firstOrCreate(['sku' => $variantData['sku']]);
+                
+                foreach ($variantData['attribute_values'] as $valueData) {
+                    $attribute = \App\Models\Attribute::firstOrCreate(['name' => $valueData['attribute']]);
+                    $attributeValue = \App\Models\AttributeValue::firstOrCreate([
+                        'attribute_id' => $attribute->id,
+                        'value' => $valueData['value']
+                    ]);
+                    $variant->product_variant_values()->firstOrCreate([
+                        'attribute_value_id' => $attributeValue->id
+                    ]);
+                }
+            }
 
-        foreach ($variantData['values'] as $valueData) {
-            // Tạo mới hoặc lấy attribute
-            $attribute = \App\Models\Attribute::firstOrCreate(['name' => $valueData['attribute']]);
-            // Tạo mới hoặc lấy attribute_value
-            $attributeValue = \App\Models\AttributeValue::firstOrCreate([
-                'attribute_id' => $attribute->id,
-                'value' => $valueData['value']
-            ]);
-            // Gắn giá trị vào variant
-            $variant->product_variant_values()->firstOrCreate([
-                'attribute_value_id' => $attributeValue->id
-            ]);
-        }
+        // Trả về sản phẩm đã load các quan hệ
+        return $this->repository->find($product->id, ['relations' => ['category']]);
     }
-
-    // Trả về sản phẩm đã load các quan hệ
-        return $this->repository->find($product->id, [
-            'relations' => ['category']
-        ]);
-    }
-}
+}}

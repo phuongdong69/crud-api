@@ -23,7 +23,21 @@ class StoreProductRequest extends FormRequest
     {
          return [
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:1000',
+            'category_id'   => 'required_without:category_name|nullable|exists:categories,id',
+            'category_name' => 'required_without:category_id|nullable|string|max:255',
+
+            // Biến thể sản phẩm
+            'variants' => 'nullable|array',
+            'variants.*' => 'array',
+            'variants.*.sku' => 'required|string|max:255',
+            'variants.*.price' => 'required|numeric|min:0',
+            'variants.*.stock' => 'required|integer|min:0',
+
+            // Thuộc tính của biến thể
+            'variants.*.attribute_values' => 'required|array|min:1',
+            'variants.*.attribute_values.*.attribute' => 'required|string|max:255',
+            'variants.*.attribute_values.*.value' => 'required|string|max:255',
         ];
     }
 }

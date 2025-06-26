@@ -22,7 +22,10 @@ class StoreAttributeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:attributes,name',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            
+
         ];
     }
 }
