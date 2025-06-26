@@ -3,7 +3,7 @@
 namespace App\Services\Shipping;
 
 use App\DTOs\ShippingItemDTO;
-
+use App\Repositories\ShippingSettingRepository;
 
 class FeeByWeight implements ShippingFeeStrategy
 {
@@ -15,6 +15,7 @@ class FeeByWeight implements ShippingFeeStrategy
     }
     public static function fromConfig(): self
     {
-        return new self(config('shipping.weight_coefficient'));
+        $coefficient = ShippingSettingRepository::get('weight_coefficient');
+        return new self($coefficient);
     }
 }
